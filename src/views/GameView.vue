@@ -48,7 +48,6 @@ export default {
     return {
       showModal: false,
       map: shallowRef(null),
-      MAP_COLORS: [],
       geojson: [],
       guessedCountries: [],
       country: "",
@@ -78,25 +77,8 @@ export default {
         mapType: window.mapkit.Map.MapTypes.Satellite,
         center: new window.mapkit.Coordinate(25.0, 15.0),
         region: region,
-        ///showsUserLocation: true,
-        //showsUserLocationControl: true,
       });
       map.showsCompass = window.mapkit.FeatureVisibility.Visible;
-
-      this.map = map;
-      const MAP_COLORS = [
-        {
-          color: "#CACACA",
-          //range: "0",
-          guessed: false,
-        },
-        {
-          color: "#008000",
-          //range: "1+",
-          guessed: true,
-        },
-      ];
-      this.MAP_COLORS = MAP_COLORS;
 
       let geoJSONParserDelegate = {
         itemForPolygon: (overlay) => {
@@ -130,19 +112,7 @@ export default {
       if (this.geojson.length === 0) {
         this.$axios.get("countries.php").then((response) => {
           let data = response.data;
-          console.log(response.data.features);
           this.geojson = JSON.parse(JSON.stringify(response.data));
-          console.log("load2", this.geojson);
-          /*response.data.features.forEach((feature) => {
-            if (
-              formatCountryName(feature.properties.NAME) ===
-                formatCountryName(this.countryPair.from) ||
-              formatCountryName(feature.properties.NAME) ===
-                formatCountryName(this.countryPair.to)
-            ) {
-              feature.properties.count = 15;
-            }
-          });*/
           window.mapkit.importGeoJSON(data, geoJSONParserDelegate);
         });
       } else {
@@ -169,9 +139,6 @@ export default {
             this.updateMap();
             this.country = "";
           }
-          /*else{
-          alert("You already guessed " + this.country + "!");
-        }*/
         } else {
           alert(this.country + " is not a valid country name!");
         }
