@@ -23,6 +23,16 @@
   </div>
   <button id="reload-button" @click="reloadGame">&#x21bb;</button>
 
+  <div class="guessed-countries">
+    <h3>Guessed Countries</h3>
+    <ul>
+      <li v-if="guessedCountries.length === 0">You haven't guessed any country yet</li>
+      <li v-for="(country, index) in guessedCountries" :key="index">
+        {{ country }}
+      </li>
+    </ul>
+  </div>
+
   <div v-if="showModal" class="modal">
     <div class="modal-content">
       <span class="close" @click="closeModal">&times;</span>
@@ -35,12 +45,7 @@
 
 <script>
 import { shallowRef } from "vue";
-import {
-  //getRandomCountryPair,
-  //isConnected,
-  formatCountryName,
-  isValidCountry,
-} from "../getCountries.js";
+import { formatCountryName, isValidCountry } from "../getCountries.js";
 
 export default {
   name: "App",
@@ -79,6 +84,7 @@ export default {
         region: region,
       });
       map.showsCompass = window.mapkit.FeatureVisibility.Visible;
+      this.map = map;
 
       let geoJSONParserDelegate = {
         itemForPolygon: (overlay) => {
@@ -382,5 +388,32 @@ export default {
   text-decoration: none;
   cursor: pointer;
 }
+
+.guessed-countries {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 10px;
+  border-radius: 24px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1005;
+}
+
+.guessed-countries h3 {
+  text-align: center;
+  margin: 5px 0 10px 0;
+}
+
+.guessed-countries ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.guessed-countries li {
+  margin: 5px 0;
+}
 </style>
-r
