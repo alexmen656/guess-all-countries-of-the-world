@@ -1,7 +1,7 @@
 <template>
   <div class="start-view">
     <div class="container">
-      <h1 class="welcome-text">Welcome to the Game!</h1>
+      <h1 class="welcome-text">Welcome to Globe Rush!</h1>
       <form @submit.prevent="submitUsername" class="form-container">
         <input
           type="text"
@@ -9,7 +9,7 @@
           placeholder="Enter your username"
           class="username-input"
         />
-        <button type="submit" class="submit-button">Start</button>
+        <button type="submit" class="submit-button"><strong>Start</strong></button>
       </form>
     </div>
   </div>
@@ -73,7 +73,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  background-color: rgba(0, 0, 0, 0.55); /* Semi-transparent overlay */
   z-index: 1;
 }
 
@@ -104,14 +104,14 @@ export default {
 }
 
 .username-input {
-  font-size: 16px;
+  font-size: 20px;
   margin-bottom: 0;
 }
 
 .submit-button {
-  background-color: #007bff;
+  background-color: #000000;
   color: white;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

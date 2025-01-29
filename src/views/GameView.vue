@@ -20,7 +20,7 @@
     <!-- <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span> -->
   </div>
 
-  <div :class="['counter', timerColor]">{{ minutes }}:{{ seconds }}</div>
+  <div :class="['counter', timerColor]"><strong>{{ minutes }}:{{ seconds }}</strong></div>
   <div class="leaderboard-button" @click="fetchLeaderboard">Leaderboard</div>
   <div class="guessed-countries">
     <h3>Guessed Countries</h3>
@@ -582,6 +582,7 @@ export default {
   top: 10px;
   left: 10px;
   background-color: white;
+  color: rgb(0, 86, 0);
   padding: 5px 10px;
   background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

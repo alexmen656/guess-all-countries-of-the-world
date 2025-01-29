@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $uuid = uniqid();
 
         // Validate username length
-        if (strlen($name) > 10) {
+        /*if (strlen($name) > 10) {
             echo json_encode(["error" => "Username must be 10 characters or less"]);
             http_response_code(400);
             exit();
-        }
+        }*/
 
         $sql = "INSERT INTO leaderboard (uuid, name, count) VALUES ('$uuid', '$name', $count)";
         if ($conn->query($sql) === TRUE) {
