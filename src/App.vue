@@ -33,4 +33,8 @@ html {
     Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
   cursor: pointer;
 }
+
+* {
+  box-sizing: border-box;
+}
 </style>

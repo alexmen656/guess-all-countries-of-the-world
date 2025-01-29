@@ -41,7 +41,7 @@ const allCountries = [
   "malaysia",
   "cyprus",
   "india",
-  "people's_republic_of_china",
+  "china",//people's_republic_of_
   "israel",
   "palestine",
   "lebanon",

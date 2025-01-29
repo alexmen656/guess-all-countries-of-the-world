@@ -2,12 +2,10 @@
   <header class="app-header">
     <h1>Name all countries of the World!</h1>
     <p class="app-description">
-      In this game, you get two countries, and your job is to guess other
-      countries that connect them by sharing borders. Each country you guess has
-      to touch the previous one, like building a chain. If you guess a country
-      that's not in the chain, it won't help you connect the two countries. if
-      you misspell a country's name, it won't be accepted, so be careful with
-      your spelling!
+      In this game, you must name as many countries as possible within 90
+      seconds. If you misspell a country's name, it won't be accepted, so be
+      careful with your spelling! The timer starts as soon as you enter the
+      first country!
     </p>
   </header>
   <div id="map" style="width: 100%; height: 100vh"></div>
@@ -20,25 +18,77 @@
         placeholder="Enter country name and press Enter"
       />
     </form>
+    <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span>
   </div>
-  <button id="reload-button" @click="reloadGame">&#x21bb;</button>
+
+  <div :class="['counter', timerColor]">{{ minutes }}:{{ seconds }}</div>
 
   <div class="guessed-countries">
     <h3>Guessed Countries</h3>
     <ul>
-      <li v-if="guessedCountries.length === 0">You haven't guessed any country yet</li>
+      <li v-if="guessedCountries.length === 0">
+        You haven't guessed any country yet
+      </li>
       <li v-for="(country, index) in guessedCountries" :key="index">
-        {{ country }}
+        {{ formatForDisplay(country) }}
       </li>
     </ul>
   </div>
 
   <div v-if="showModal" class="modal">
     <div class="modal-content">
-      <span class="close" @click="closeModal">&times;</span>
-      <h2>Congratulations!</h2>
-      <p>You have successfully connected with .</p>
+      <span class="close" @click="showModal = false">&times;</span>
+      <h2>Times over!</h2>
+      <p>
+        The time is over you guessed {{ guessedCountries.length }} in total.
+        Thats better than
+        <span :class="percentageClass">{{ percentage }}%</span> of other
+        players.
+      </p>
+      <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span>
       <button @click="reloadGame">Play Again</button>
+    </div>
+  </div>
+
+  <div v-if="showLeaderboard" class="modal2">
+    <div class="modal-content2">
+      <span class="close" @click="showLeaderboard = false">&times;</span>
+      <h2>Leaderboard</h2>
+      <div class="podium">
+        <div v-if="leaderboard[1]" class="second">
+          <div class="position">2.</div>
+          <div class="name">{{ leaderboard[1].name }}</div>
+          <div class="score">{{ leaderboard[1].count }}</div>
+        </div>
+        <div v-if="leaderboard[0]" class="first">
+          <div class="position">1.</div>
+          <div class="name">{{ leaderboard[0].name }}</div>
+          <div class="score">{{ leaderboard[0].count }}</div>
+        </div>
+        <div v-if="leaderboard[2]" class="third">
+          <div class="position">3.</div>
+          <div class="name">{{ leaderboard[2].name }}</div>
+          <div class="score">{{ leaderboard[2].count }}</div>
+        </div>
+      </div>
+      <ul>
+        <li
+          v-for="(player, index) in leaderboard.slice(3)"
+          :key="player.name"
+          :class="{
+            striped: index % 2 === 0,
+            'non-striped': index % 2 !== 0,
+          }"
+          class="l_li"
+        >
+          <span class="place">{{ index + 4 }}. Place</span>
+          <span
+            >{{ player.name
+            }}<!--:--></span
+          >
+          <span class="score">{{ player.count }}</span>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -51,18 +101,86 @@ export default {
   name: "App",
   data() {
     return {
-      showModal: false,
       map: shallowRef(null),
       geojson: [],
       guessedCountries: [],
       country: "",
       showOutline: true,
+      showModal: false,
+      timeLeft: 20, //90,
+      leaderboard: [],
+      showLeaderboard: false,
+      percentage: 20,
+      timeOver: false,
     };
   },
+  computed: {
+    formatForDisplay() {
+      return (country) => {
+        return country
+          .split(/_| /)
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      };
+    },
+    percentageClass() {
+      if (this.percentage >= 90) {
+        return "high-percentage";
+      } else if (this.percentage >= 50) {
+        return "medium-percentage";
+      } else {
+        return "low-percentage";
+      }
+    },
+    minutes() {
+      return Math.floor(this.timeLeft / 60);
+    },
+    seconds() {
+      return this.timeLeft % 60 < 10
+        ? "0" + (this.timeLeft % 60)
+        : this.timeLeft % 60;
+    },
+    timerColor() {
+      if (this.timeLeft < 10) {
+        return "red";
+      } else if (this.timeLeft < 30) {
+        return "orange";
+      } else {
+        return "";
+      }
+    },
+  },
   async mounted() {
+    /* if (!localStorage.getItem("verification_id")) {
+      this.$router.push("/");
+    }*/
+
     await this.initMap();
   },
   methods: {
+    fetchLeaderboard() {
+      this.$axios("leaderboard.php").then((response) => {
+        this.leaderboard = response.data;
+        this.showLeaderboard = true;
+      });
+    },
+    startCountdown() {
+      const countdown = setInterval(async () => {
+        if (this.timeLeft > 0) {
+          this.timeLeft--;
+        } else {
+          clearInterval(countdown);
+          await this.calculatePercentage();
+          this.showModal = true;
+          this.timeOver = true;
+          this.$axios.post("leaderboard.php", {
+            action: "update",
+            uuid: localStorage.getItem("verification_id"),
+            count: this.guessedCountries.length,
+          });
+        }
+      }, 1000);
+    },
     async initMap() {
       await window.mapkit.init({
         authorizationCallback: function (done) {
@@ -138,21 +256,27 @@ export default {
       }
     },
     submitCountrie() {
-      if (this.country.trim()) {
-        if (isValidCountry(this.country)) {
-          if (!this.guessedCountries.includes(this.country)) {
-            this.guessedCountries.push(this.country);
-            this.updateMap();
-            this.country = "";
+      if (!this.timeOver) {
+        if (this.country.trim()) {
+          if (isValidCountry(this.country)) {
+            if (this.guessedCountries.length === 0) {
+              this.startCountdown();
+            }
+            if (!this.guessedCountries.includes(this.country)) {
+              this.guessedCountries.push(this.country);
+              this.updateMap();
+              this.country = "";
+            }
+          } else {
+            alert(this.country + " is not a valid country name!");
           }
         } else {
-          alert(this.country + " is not a valid country name!");
+          alert("Please enter a country name!");
         }
-      } else {
-        alert("Please enter a country name!");
       }
     },
     updateMap() {
+      console.log(1);
       let geoJSONParserDelegate = {
         itemForPolygon: (overlay) => {
           const strokeOpacity = this.showOutline ? 0.8 : 0;
@@ -208,10 +332,11 @@ export default {
           let data = response.data;
           data.features.forEach((feature) => {
             if (
-              this.guessedCountries.includes(
+              this.formatedGuessedCountries(this.guessedCountries).includes(
                 formatCountryName(feature.properties.name_en)
               )
             ) {
+              console.log(feature.properties.name_en + " is guessed!");
               feature.properties.guessed = true;
             }
           });
@@ -224,12 +349,14 @@ export default {
       } else {
         const data2 = JSON.parse(JSON.stringify(this.geojson));
         let data = data2;
+        console.log(this.guessedCountries);
         data.features.forEach((feature) => {
           if (
-            this.guessedCountries.includes(
+            this.formatedGuessedCountries(this.guessedCountries).includes(
               formatCountryName(feature.properties.name_en)
             )
           ) {
+            console.log(feature.properties.name_en + " is guessed!");
             feature.properties.guessed = true;
           }
         });
@@ -237,6 +364,26 @@ export default {
         this.map.overlays.forEach((overlay) => this.map.removeOverlay(overlay));
         window.mapkit.importGeoJSON(data, geoJSONParserDelegate);
       }
+    },
+    reloadGame() {
+      this.guessedCountries = [];
+      this.timeLeft = 20;
+      this.showModal = false;
+      this.updateMap();
+    },
+    formatedGuessedCountries(countries) {
+      return countries.map((country) => formatCountryName(country));
+    },
+    async calculatePercentage() {
+      await this.$axios("leaderboard.php").then((response) => {
+        const leaderboard = response.data;
+        const playerCount = this.guessedCountries.length;
+        const betterPlayers = leaderboard.filter(
+          (player) => player.count < playerCount
+        ).length;
+        const totalPlayers = leaderboard.length;
+        this.percentage = Math.round((betterPlayers / totalPlayers) * 100);
+      });
     },
   },
 };
@@ -415,5 +562,211 @@ export default {
 }
 .guessed-countries li {
   margin: 5px 0;
+}
+
+.counter {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: white;
+  padding: 5px 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 18px;
+  z-index: 1005;
+}
+
+.counter.orange {
+  color: rgb(255, 132, 0);
+}
+
+.counter.red {
+  color: red;
+}
+
+#score {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.modal2 > button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.modal2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content2 {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.podium > div {
+  text-align: center;
+  margin: 0 10px;
+}
+
+.first {
+  order: 1;
+  background-color: gold;
+  padding: 10px;
+  border-radius: 10px;
+  height: 130px;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.second {
+  order: 0;
+  background-color: silver;
+  padding: 10px;
+  border-radius: 10px;
+  height: 100px;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.third {
+  order: 2;
+  background-color: #cd7f32;
+  padding: 10px;
+  border-radius: 10px;
+  height: 80px;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.position {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.name {
+  font-size: 18px;
+}
+
+.score2,
+.nextCity {
+  font-size: 24px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.nextCity:focus,
+.nextCity:focus-visible,
+.difficulty {
+  /*border: none !important;*/
+  outline: none !important;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 10px;
+  padding-left: 18.5px;
+}
+
+.l_li {
+  display: flex;
+  /*justify-content: space-between;*/
+  padding: 2px;
+}
+
+.l_li > span {
+  flex: 1;
+  text-align: center;
+}
+
+.l_li > .score {
+  text-align: end;
+}
+
+.l_li > .place {
+  text-align: start;
+}
+
+.l_li.striped {
+  background-color: #cdcdcd;
+}
+
+.l_li.non-striped {
+  background-color: #ffffff;
+}
+
+ul {
+  margin: 0;
+  padding: 10px;
+}
+
+.high-percentage {
+  color: green;
+  font-weight: bold;
+}
+.medium-percentage {
+  color: orange;
+  font-weight: bold;
+}
+.low-percentage {
+  color: red;
+  font-weight: bold;
+}
+
+.guessed-countries li {
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -1,78 +1,121 @@
 <template>
-    <div class="start-view">
-      <h1>Welcome to the Game!</h1>
-      <form @submit.prevent="submitUsername">
-        <input
-          type="text"
-          v-model="username"
-          placeholder="Enter your username"
-          class="username-input"
-        />
-        <button type="submit" class="submit-button">Start</button>
-      </form>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        username: "",
-      };
-    },
-    methods: {
-      submitUsername() {
-        if (this.username.trim()) {
-          alert(`Welcome, ${this.username}!`);
-          // Here, you could route to the next view or emit an event.
-        } else {
-          alert("Please enter a username!");
+  <div class="start-view">
+    <h1 class="welcome-text">Welcome to the Game!</h1>
+    <form @submit.prevent="submitUsername" class="form-container">
+      <input
+        type="text"
+        v-model="username"
+        placeholder="Enter your username"
+        class="username-input"
+      />
+      <button type="submit" class="submit-button">Start</button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      username: "",
+    };
+  },
+  methods: {
+    async submitUsername() {
+      if (this.username.trim()) {
+        try {
+          const response = await this.$axios.post("leaderboard.php", {
+            action: "register",
+            name: this.username,
+          });
+
+          if (response.data.success) {
+            localStorage.setItem("verification_id", response.data.uuid);
+            localStorage.setItem("username", this.username);
+            this.$router.push("/game");
+          } else {
+            alert(`Error: ${response.data.error}`);
+          }
+        } catch (error) {
+          alert("An error occurred while registering. Please try again.");
         }
-      },
+      } else {
+        alert("Please enter a username!");
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  .start-view {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f3f4f6;
-  }
-  
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .username-input {
-    padding: 0.5rem;
-    font-size: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .submit-button {
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  </style>
+  },
+};
+</script>
+
+<style>
+.start-view {
+  position: relative;
+  background-image: url("@/assets/bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+.start-view::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  z-index: 1;
+}
+
+.start-view > * {
+  position: relative;
+  z-index: 2;
+}
+
+.welcome-text {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.username-input,
+.submit-button {
+  width: 300px;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: none;
+}
+
+.username-input {
+  font-size: 16px;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+</style>
