@@ -1,4 +1,24 @@
-#  GlobeRush – Name as many countries as possible in 1:30!
+# 🌍 GlobeRush – Name as many countries as possible in 1:30!
+
+## Project Description
+GlobeRush is a fun and educational game where you must name as many countries as possible within 90 seconds. Be careful with your spelling, as misspelled country names won't be accepted. The timer starts as soon as you enter the first country! You can also use shortcuts like "USA" for "United States of America" and "UK" for "United Kingdom".
+
+The game features a world map created with MapKit JS and GeoJSON. When you correctly name a country, it will be highlighted in green on the map. Additionally, there is a leaderboard that tracks the players who have named the most countries.
+
+## Features
+- Name as many countries as possible within 90 seconds.
+- Supports common country name abbreviations (e.g., "USA" for "United States of America", "UK" for "United Kingdom"). - This was a little bit tricky to make.
+- Real-time feedback on correct and incorrect entries.
+- World map created with MapKit JS and GeoJSON.
+- Correctly named countries are highlighted in green on the map.
+- Leaderboard to track top players.
+
+### Frontend
+- MapKit JS
+- Vue.js
+- HTML
+- JavaScript
+- CSS
 
 ## Project setup
 ```
@@ -23,7 +43,5 @@ npm run lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-Thanks to https://geojson-maps.kyd.au/ for the geojson :)
-
-Todo:
-Redesign buttons on times up modal
+## Credits
+Geojson - https://geojson-maps.kyd.au
