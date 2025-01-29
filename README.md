@@ -3,7 +3,7 @@
 ## Project Description
 GlobeRush is a fun and educational game where you must name as many countries as possible within 90 seconds. Be careful with your spelling, as misspelled country names won't be accepted. The timer starts as soon as you enter the first country! You can also use shortcuts like "USA" for "United States of America" and "UK" for "United Kingdom".
 
-The game features a world map created with MapKit JS and GeoJSON. When you correctly name a country, it will be highlighted in green on the map. Additionally, there is a leaderboard that tracks the players who have named the most countries.
+The game features a world map created with MapKit JS and GeoJSON. When you correctly name a country, it will be highlighted in green on the map. Additionally, there is a leaderboard that tracks the players who have named the most countries. The game also shows how well you performed compared to other players, for example, "You guessed 21 countries, that is better than 98% of the players."
 
 ## Features
 - Name as many countries as possible within 90 seconds.
@@ -12,6 +12,14 @@ The game features a world map created with MapKit JS and GeoJSON. When you corre
 - World map created with MapKit JS and GeoJSON.
 - Correctly named countries are highlighted in green on the map.
 - Leaderboard to track top players.
+- Performance comparison with other players. - For example: "You guessed 21 countries, that is better than 98% of the players."
+
+## Technical Stack
+
+### Backend
+- PHP
+- MySQL
+- GeoJSON
 
 ### Frontend
 - MapKit JS
