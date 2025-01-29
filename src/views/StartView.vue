@@ -52,7 +52,7 @@ export default {
 <style>
 .start-view {
   position: relative;
-  background-image: url("@/assets/bg.png");
+  background-image: url("@/assets/bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
