@@ -46,8 +46,7 @@
         >
         of other players.
       </p>
-      <button @click="fetchLeaderboard">Leaderboard</button
-      >
+      <button @click="fetchLeaderboard">Leaderboard</button>
       <button @click="reloadGame">Play Again</button>
     </div>
   </div>
@@ -458,9 +457,16 @@ export default {
   text-align: center;
   justify-content: center;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.05) 70%,
+    rgba(0, 0, 0, 0) 80%
+  );
   margin-bottom: 20px;
   padding-bottom: 45px;
+  box-shadow: none;
+  filter: none;
 }
 
 .app-header h1 {
@@ -586,7 +592,6 @@ export default {
 
 .counter.orange {
   color: rgb(255, 64, 0);
-  ;
 }
 
 .counter.red {
@@ -636,7 +641,6 @@ export default {
   font-size: 28px;
   font-weight: bold;
   margin-top: 3px;
-
 }
 
 .close:hover,
