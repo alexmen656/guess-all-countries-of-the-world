@@ -1,3 +1,10 @@
+const countryAbbreviations = {
+  "usa": "united_states_of_america",
+  "us": "united_states_of_america",
+  "united_states": "united_states_of_america",
+  "uk": "united_kingdom",
+};
+
 const allCountries = [
   "costa_rica",
   "nicaragua",
@@ -250,9 +257,22 @@ function formatCountryName(name) {
   return name;
 }
 
-function isValidCountry(country) {
+/*function isValidCountry(country) {
   const formattedCountry = formatCountryName(country);
   return allCountries.includes(formattedCountry);
+}*/
+
+function isValidCountry(input) {
+  const normalizedInput = input.trim().toLowerCase().replace(/\s+/g, '_');
+  if (allCountries.includes(normalizedInput)) {
+      return input;
+  }
+  for (const [abbr, fullName] of Object.entries(countryAbbreviations)) {
+      if (normalizedInput === abbr.toLowerCase() || normalizedInput === fullName.toLowerCase()) {
+          return fullName;
+      }
+  }
+  return false;
 }
 
 export { formatCountryName, isValidCountry };

@@ -259,7 +259,8 @@ export default {
     submitCountrie() {
       if (!this.timeOver) {
         if (this.country.trim()) {
-          if (isValidCountry(this.country)) {
+          if (isValidCountry(this.country) != false) {
+            this.country = isValidCountry(this.country);
             if (this.guessedCountries.length === 0) {
               this.startCountdown();
             }
