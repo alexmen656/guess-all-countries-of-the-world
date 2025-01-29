@@ -10,7 +10,6 @@
   </header>
   <div id="map" style="width: 100%; height: 100vh"></div>
   <div id="floating-input">
-    <h1>Name a countrie</h1>
     <form @submit.prevent="submitCountrie">
       <input
         type="text"
@@ -18,11 +17,11 @@
         placeholder="Enter country name and press Enter"
       />
     </form>
-    <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span>
+    <!-- <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span> -->
   </div>
 
   <div :class="['counter', timerColor]">{{ minutes }}:{{ seconds }}</div>
-
+  <div class="leaderboard-button" @click="fetchLeaderboard">Leaderboard</div>
   <div class="guessed-countries">
     <h3>Guessed Countries</h3>
     <ul>
@@ -45,7 +44,9 @@
         <span :class="percentageClass">{{ percentage }}%</span> of other
         players.
       </p>
-      <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span>
+      <span @click="fetchLeaderboard" class="leaderboard-link"
+        >Leaderboard</span
+      >
       <button @click="reloadGame">Play Again</button>
     </div>
   </div>
@@ -151,9 +152,9 @@ export default {
     },
   },
   async mounted() {
-    /* if (!localStorage.getItem("verification_id")) {
+    if (!localStorage.getItem("verification_id")) {
       this.$router.push("/");
-    }*/
+    }
 
     await this.initMap();
   },
@@ -573,7 +574,7 @@ export default {
   background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  font-size: 18px;
+  font-size: 24px;
   z-index: 1005;
 }
 
@@ -609,6 +610,7 @@ export default {
   height: 100%;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1010;
 }
 
 .modal-content2 {
@@ -768,5 +770,18 @@ ul {
   border-radius: 5px;
   display: flex;
   justify-content: center;
+}
+
+.leaderboard-button {
+  position: absolute;
+  top: 10px;
+  left: 89px;
+  background-color: white;
+  padding: 5px 10px;
+  background-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-size: 24px;
+  z-index: 1005;
 }
 </style>
