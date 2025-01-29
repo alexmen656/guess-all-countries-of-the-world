@@ -1,15 +1,17 @@
 <template>
   <div class="start-view">
-    <h1 class="welcome-text">Welcome to the Game!</h1>
-    <form @submit.prevent="submitUsername" class="form-container">
-      <input
-        type="text"
-        v-model="username"
-        placeholder="Enter your username"
-        class="username-input"
-      />
-      <button type="submit" class="submit-button">Start</button>
-    </form>
+    <div class="container">
+      <h1 class="welcome-text">Welcome to the Game!</h1>
+      <form @submit.prevent="submitUsername" class="form-container">
+        <input
+          type="text"
+          v-model="username"
+          placeholder="Enter your username"
+          class="username-input"
+        />
+        <button type="submit" class="submit-button">Start</button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -81,10 +83,8 @@ export default {
 }
 
 .welcome-text {
-  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 24px;
+  font-size: 36px;
   margin-bottom: 20px;
 }
 
@@ -96,7 +96,7 @@ export default {
 
 .username-input,
 .submit-button {
-  width: 300px;
+  width: 400px;
   padding: 10px;
   margin: 10px 0;
   border-radius: 4px;
@@ -105,6 +105,7 @@ export default {
 
 .username-input {
   font-size: 16px;
+  margin-bottom: 0;
 }
 
 .submit-button {
@@ -117,5 +118,11 @@ export default {
 
 .submit-button:hover {
   background-color: #0056b3;
+}
+
+.container {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 32px;
+  padding: 20px;
 }
 </style>

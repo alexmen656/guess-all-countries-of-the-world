@@ -37,15 +37,16 @@
   <div v-if="showModal" class="modal">
     <div class="modal-content">
       <span class="close" @click="showModal = false">&times;</span>
-      <h2>Times over!</h2>
+      <h2>Time's up!</h2>
       <p>
-        The time is over you guessed {{ guessedCountries.length }} in total.
-        Thats better than
-        <span :class="percentageClass">{{ percentage }}%</span> of other
-        players.
+        Time is up! You guessed {{ guessedCountries.length }} countries in
+        total. That's better than
+        <span :class="percentageClass"
+          ><strong>{{ percentage }}%</strong></span
+        >
+        of other players.
       </p>
-      <span @click="fetchLeaderboard" class="leaderboard-link"
-        >Leaderboard</span
+      <button @click="fetchLeaderboard">Leaderboard</button
       >
       <button @click="reloadGame">Play Again</button>
     </div>
@@ -108,7 +109,7 @@ export default {
       country: "",
       showOutline: true,
       showModal: false,
-      timeLeft: 20, //90,
+      timeLeft: 90, //90,
       leaderboard: [],
       showLeaderboard: false,
       percentage: 20,
@@ -193,7 +194,7 @@ export default {
       });
 
       const region = new window.mapkit.CoordinateRegion(
-        new window.mapkit.Coordinate(25.0, 15.0),
+        new window.mapkit.Coordinate(28.0, 15.0),
         new window.mapkit.CoordinateSpan(180.0, 360.0)
       );
 
@@ -277,7 +278,6 @@ export default {
       }
     },
     updateMap() {
-      console.log(1);
       let geoJSONParserDelegate = {
         itemForPolygon: (overlay) => {
           const strokeOpacity = this.showOutline ? 0.8 : 0;
@@ -368,7 +368,8 @@ export default {
     },
     reloadGame() {
       this.guessedCountries = [];
-      this.timeLeft = 20;
+      this.timeLeft = 90;
+      this.timeOver = false;
       this.showModal = false;
       this.updateMap();
     },
@@ -445,6 +446,7 @@ export default {
   border: 2px solid #ccc;
   border-radius: 12px;
   box-sizing: border-box;
+  text-align: center;
 }
 
 .app-header {
@@ -456,15 +458,17 @@ export default {
   text-align: center;
   justify-content: center;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
-  margin-bottom: 10px;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+  margin-bottom: 20px;
+  padding-bottom: 45px;
 }
 
 .app-header h1 {
   font-size: 2em;
   color: #fff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
   margin-bottom: 5px;
+  margin-top: 15px;
 }
 
 .app-description {
@@ -541,18 +545,19 @@ export default {
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 200px;
+  width: 230px;
   max-height: 300px;
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.6);
   padding: 10px;
-  border-radius: 24px;
+  border-radius: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 1005;
 }
 
 .guessed-countries h3 {
   text-align: center;
+  font-size: 22px;
   margin: 5px 0 10px 0;
 }
 
@@ -563,6 +568,7 @@ export default {
 }
 .guessed-countries li {
   margin: 5px 0;
+  font-size: 18px;
 }
 
 .counter {
@@ -579,11 +585,12 @@ export default {
 }
 
 .counter.orange {
-  color: rgb(255, 132, 0);
+  color: rgb(255, 64, 0);
+  ;
 }
 
 .counter.red {
-  color: red;
+  color: rgb(174, 0, 0);
 }
 
 #score {
@@ -628,6 +635,8 @@ export default {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  margin-top: 3px;
+
 }
 
 .close:hover,
@@ -783,5 +792,31 @@ ul {
   border-radius: 8px;
   font-size: 24px;
   z-index: 1005;
+}
+
+.leaderboard-button:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.modal button {
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+}
+
+.modal h2 {
+  font-size: 28px;
+}
+
+.modal p {
+  font-size: 20px;
+}
+
+.modal .close {
+  margin-top: 5px;
 }
 </style>
