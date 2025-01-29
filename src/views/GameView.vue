@@ -4,8 +4,9 @@
     <p class="app-description">
       In this game, you must name as many countries as possible within 90
       seconds. If you misspell a country's name, it won't be accepted, so be
-      careful with your spelling! The timer starts as soon as you enter the
-      first country!
+      careful with your spelling! You can also use shortcuts like for example
+      "USA" for "United States". The timer starts as soon as you enter the first
+      country!
     </p>
   </header>
   <div id="map" style="width: 100%; height: 100vh"></div>
@@ -20,7 +21,9 @@
     <!-- <span @click="fetchLeaderboard" class="leaderboard-link">Leaderboard</span> -->
   </div>
 
-  <div :class="['counter', timerColor]"><strong>{{ minutes }}:{{ seconds }}</strong></div>
+  <div :class="['counter', timerColor]">
+    <strong>{{ minutes }}:{{ seconds }}</strong>
+  </div>
   <div class="leaderboard-button" @click="fetchLeaderboard">Leaderboard</div>
   <div class="guessed-countries">
     <h3>Guessed Countries</h3>
@@ -465,7 +468,7 @@ export default {
     rgba(0, 0, 0, 0) 80%
   );
   margin-bottom: 20px;
-  padding-bottom: 45px;
+  padding-bottom: 120px;
   box-shadow: none;
   filter: none;
 }
@@ -476,6 +479,10 @@ export default {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
   margin-bottom: 5px;
   margin-top: 15px;
+}
+
+.app-header p {
+text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .app-description {
@@ -576,6 +583,7 @@ export default {
 .guessed-countries li {
   margin: 5px 0;
   font-size: 18px;
+  text-align: center;
 }
 
 .counter {

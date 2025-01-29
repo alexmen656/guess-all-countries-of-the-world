@@ -3,6 +3,12 @@ const countryAbbreviations = {
   "us": "united_states_of_america",
   "united_states": "united_states_of_america",
   "uk": "united_kingdom",
+  "uae": "united_arab_emirates",
+  "drc": "democratic_republic_of_the_congo",
+  "congo": "republic_of_the_congo",
+  "prc": "china",
+  "nz": "new_zealand"
+
 };
 
 const allCountries = [
