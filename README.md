@@ -18,7 +18,10 @@ The game features a world map created with MapKit JS and GeoJSON. When you corre
 - Performance comparison with other players. - For example: "You guessed 21 countries, that is better than 98% of the players."
 
 ## How to use
-
+- Go to [https://globe-rush.alex.polan.sk/](https://globe-rush.alex.polan.sk/)
+- Register with a username
+- Start naming countries
+- View the Leaderboard if you are the best!
 
 ## Technical Stack
 
@@ -36,10 +39,10 @@ The game features a world map created with MapKit JS and GeoJSON. When you corre
 
 ## Screenshots
 ![Game Play - 1](screenshots/1.jpg)
-![Game Play - 2](screenshots/2.jpg)
-![Game Play - 3](screenshots/3.jpg)
-![Time's up!](screenshots/4.jpg)
-![Leaderboard](screenshots/5.jpg)
+![Game Play - 2](screenshots/2.jpeg)
+![Game Play - 3](screenshots/3.jpeg)
+![Time's up!](screenshots/4.jpeg)
+![Leaderboard](screenshots/5.jpeg)
 
 ## Project setup
 ```
