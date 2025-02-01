@@ -34,6 +34,13 @@ The game features a world map created with MapKit JS and GeoJSON. When you corre
 - JavaScript
 - CSS
 
+## Screenshots
+![Game Play - 1](screenshots/1.jpg)
+![Game Play - 2](screenshots/2.jpg)
+![Game Play - 3](screenshots/3.jpg)
+![Time's up!](screenshots/4.jpg)
+![Leaderboard](screenshots/5.jpg)
+
 ## Project setup
 ```
 npm install
